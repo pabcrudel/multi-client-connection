@@ -9,37 +9,40 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class MyClient {
-//	Attributes
+	//	Attributes
 	private Socket socket;
 	private BufferedReader input;
 	private PrintStream output;
 	private String ip;
 	private int port;
 	
-//	Constructor
-	public MyClient(String ip, int port) {
-		try {
-			this.socket = new Socket(ip, port);
-			this.input = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
-			this.output = new PrintStream(this.socket.getOutputStream());
-		} 
-		catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	//	Setters
+	public void setIp(String ip) {this.ip = ip;}
+	public void setPort(int port) {this.port = port;}
+
+	//	Methods
+	public void setConnection() throws UnknownHostException, IOException {
+		this.socket = new Socket(ip, port);
+		this.input = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+		this.output = new PrintStream(this.socket.getOutputStream());
 	}
-	
-//	Main
+
+	//	Main
 	public static void main(String[] args) {
 		Scanner k = new Scanner(System.in);
+		MyClient client = new MyClient();
 
-		System.out.println("which ip and port do you want to connect?");
-		System.out.print("ip: ");
-		String ip = k.nextLine();
-		System.out.print("port: ");
-		int port = k.nextInt(); k.nextLine();
-		
-		MyClient client = new MyClient(ip, port);
+		try {
+			System.out.println("which ip and port do you want to connect?");
+			System.out.print("ip: ");
+			client.setIp(k.nextLine());
+			System.out.print("port: ");
+			client.setPort(k.nextInt()); k.nextLine();
+
+			client.setConnection();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
